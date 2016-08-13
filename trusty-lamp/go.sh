@@ -10,4 +10,7 @@ fi
 
 source /etc/apache2/envvars
 tail -F /var/log/apache2/* &
-exec /etc/init.d/apache2 -D FOREGROUND
+
+mysqld &
+
+exec apache2 -D FOREGROUND

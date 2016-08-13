@@ -31,7 +31,7 @@ ENV ALLOW_OVERRIDE **False**
 RUN apt-get remove -y software-properties-common && apt-get clean
 
 # Add image configuration and scripts
-ADD run.sh /run.sh
+ADD go.sh /go.sh
 RUN chmod 755 /*.sh
 
 # Configure /app folder with sample app
@@ -46,4 +46,4 @@ RUN echo '<?php echo phpinfo();' > /app/public/i.php
 
 EXPOSE 80
 WORKDIR /app
-CMD ["/run.sh"]
+CMD ["/go.sh"]
