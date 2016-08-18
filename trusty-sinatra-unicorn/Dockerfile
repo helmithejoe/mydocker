@@ -1,47 +1,15 @@
-FROM helmijoe07/ubuntu-trusty-32bit
+FROM helmijoe07/trusty-ruby-32bit
 
 MAINTAINER helmijoe07
 
-RUN apt-get -y update
+RUN gem install bundler
+RUN locale-gen en_US en_US.UTF-8
+EXPOSE 8080
 
-# install essentials
-RUN apt-get -y install build-essential curl
-RUN apt-get install -y -q git
-RUN apt-get install -y --force-yes zlib1g-dev \
-    libssl-dev \
-    libreadline-dev \
-    libyaml-dev \
-    libxml2-dev \
-    libxslt-dev \
-    libpq-dev && apt-get clean
+RUN git clone https://github.com/helmithejoe/awesome-deploy.git /opt/awesome-deploy/
 
-# Install rbenv
-RUN git clone https://github.com/sstephenson/rbenv.git /usr/local/rbenv
-RUN echo '# rbenv setup' > /etc/profile.d/rbenv.sh
-RUN echo 'export RBENV_ROOT=/usr/local/rbenv' >> /etc/profile.d/rbenv.sh
-RUN echo 'export PATH="$RBENV_ROOT/bin:$PATH"' >> /etc/profile.d/rbenv.sh
-RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh
-RUN chmod +x /etc/profile.d/rbenv.sh
+WORKDIR /opt/awesome-deploy/sinatra-unicorn-docker
 
-# install ruby-build
-RUN mkdir /usr/local/rbenv/plugins
-RUN git clone https://github.com/sstephenson/ruby-build.git /usr/local/rbenv/plugins/ruby-build
+RUN bundle install
 
-ENV RBENV_ROOT /usr/local/rbenv
-
-ENV PATH "$RBENV_ROOT/bin:$RBENV_ROOT/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-# does not work. PATH is set to
-# $RBENV_ROOT/shims:$RBENV_ROOT/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
-# install ruby2
-RUN rbenv install 2.2.2
-
-# set ruby 2.2.2 as system ruby
-RUN ["rbenv","global","2.2.2"]
-
-# install Unicorn as app server
-RUN ["gem", "install", "unicorn"]
-
-# install bundler
-RUN ["gem", "install", "bundler"]
-
+CMD ["unicorn","-d","-c", "unicorn.conf"]
