@@ -2,7 +2,8 @@ FROM helmijoe07/trusty-java8-32bit
 MAINTAINER helmijoe07
 
 WORKDIR /root
-COPY gitbucket.war /root/gitbucket.war
+
+RUN -k curl https://github.com/gitbucket/gitbucket/releases/download/4.3/gitbucket.war
 
 ADD run.sh /root/run.sh
 RUN chmod 755 /root/run.sh
