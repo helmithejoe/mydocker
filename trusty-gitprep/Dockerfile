@@ -18,6 +18,8 @@ RUN ./setup_database
 COPY run.sh /root/gitprep/run.sh
 RUN chmod 755 /root/gitprep/run.sh
 
+RUN git pull origin master
+
 CMD ["./run.sh"]
 
 
